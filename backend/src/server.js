@@ -11,7 +11,7 @@ var _database = require("./db/database");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 _dotenv.default.config();
 const app = (0, _express.default)();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.use((0, _cors.default)());
 app.use(_express.default.json({
   limit: '10mb'

@@ -15,12 +15,21 @@ const dbUser = process.env.DB_USER || 'u814366633_garage_billing';
 const dbPassword = process.env.DB_PASSWORD || 'Vicky-garage@123';
 const dbHost = process.env.DB_HOST || '127.0.0.1';
 const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306;
-const sequelize = exports.sequelize = new _sequelize.Sequelize(dbName, dbUser, dbPassword, {
-  host: dbHost,
-  port: dbPort,
-  dialect: 'mysql',
+const dialect = process.env.DB_DIALECT || 'sqlite';
+
+const sequelizeOptions = {
+  dialect: dialect,
   logging: false // Set to console.log to see SQL queries
-});
+};
+
+if (dialect === 'sqlite') {
+  sequelizeOptions.storage = './database.sqlite';
+} else {
+  sequelizeOptions.host = process.env.DB_HOST || '127.0.0.1';
+  sequelizeOptions.port = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306;
+}
+
+const sequelize = exports.sequelize = new _sequelize.Sequelize(dbName, dbUser, dbPassword, sequelizeOptions);
 async function initDatabase() {
   try {
     // Authenticate connection
