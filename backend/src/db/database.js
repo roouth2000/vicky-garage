@@ -13,7 +13,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 const dbName = process.env.DB_NAME || 'u814366633_garage_billing';
 const dbUser = process.env.DB_USER || 'u814366633_garage_billing';
 const dbPassword = process.env.DB_PASSWORD || 'Vicky-garage@123';
-const dbHost = process.env.DB_HOST || 'srv1041.hstgr.io';
+const dbHost = process.env.DB_HOST || 'localhost';
 const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306;
 const sequelize = exports.sequelize = new _sequelize.Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
