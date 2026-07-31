@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { SqliteExpenseRepository } from '../repositories/expenseRepository';
+import { SequelizeExpenseRepository } from '../repositories/expenseRepository';
 import { ExpenseService } from '../services/expenseService';
 
-const expenseRepo = new SqliteExpenseRepository();
+const expenseRepo = new SequelizeExpenseRepository();
 export const expenseService = new ExpenseService(expenseRepo);
 
 export const getExpenses = async (req: Request, res: Response) => {

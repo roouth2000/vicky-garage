@@ -32,7 +32,16 @@ import {
   getExpenseSummary
 } from '../controllers/expenseController';
 
+import authRoutes from './authRoutes';
+import { authMiddleware } from '../middlewares/authMiddleware';
+
 const router = Router();
+
+// Public routes
+router.use('/auth', authRoutes);
+
+// Protect all following routes
+router.use(authMiddleware);
 
 // Dashboard
 router.get('/dashboard/stats', getDashboardStats);

@@ -1,17 +1,16 @@
 import { Request, Response } from 'express';
-import { dbAll, dbGet, dbRun } from '../db/database';
+import { Product } from '../models';
+import { Op } from 'sequelize';
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const search = (req.query.search as string) || '';
-    let sql = 'SELECT * FROM products';
-    let params: any[] = [];
-    if (search) {
-      sql += ' WHERE name LIKE ?';
-      params.push(`%${search}%`);
-    }
-    sql += ' ORDER BY name ASC';
-    const products = await dbAll(sql, params);
+    const whereClause = search ? { name: { [Op.like]: `%${search}%` } } : {};
+    
+    const products = await Product.findAll({
+      where: whereClause,
+      order: [['name', 'ASC']],
+    });
     res.json({ success: true, data: products });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -21,7 +20,7 @@ export const getProducts = async (req: Request, res: Response) => {
 export const getProductById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const product = await dbGet('SELECT * FROM products WHERE id = ?', [id]);
+    const product = await Product.findByPk(id);
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
@@ -39,17 +38,17 @@ export const createProduct = async (req: Request, res: Response) => {
     }
 
     const cleanName = name.trim().toUpperCase();
-    const existing = await dbGet('SELECT id FROM products WHERE name = ?', [cleanName]);
+    const existing = await Product.findOne({ where: { name: cleanName } });
     if (existing) {
       return res.status(400).json({ success: false, message: 'Product already exists' });
     }
 
-    const result = await dbRun(
-      'INSERT INTO products (name, stock_qty, selling_price) VALUES (?, ?, ?)',
-      [cleanName, Number(stock_qty) || 0, Number(selling_price) || 0]
-    );
+    const newProduct = await Product.create({
+      name: cleanName,
+      stock_qty: Number(stock_qty) || 0,
+      selling_price: Number(selling_price) || 0,
+    });
 
-    const newProduct = await dbGet('SELECT * FROM products WHERE id = ?', [result.lastID]);
     res.status(201).json({ success: true, data: newProduct });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -61,28 +60,27 @@ export const updateProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, stock_qty, selling_price } = req.body;
 
-    const existing = await dbGet('SELECT * FROM products WHERE id = ?', [id]);
+    const existing = await Product.findByPk(id);
     if (!existing) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
     const cleanName = name ? name.trim().toUpperCase() : existing.name;
 
-    // Check duplicate if name changed
     if (cleanName !== existing.name) {
-      const dup = await dbGet('SELECT id FROM products WHERE name = ? AND id != ?', [cleanName, id]);
+      const dup = await Product.findOne({ where: { name: cleanName, id: { [Op.ne]: id } } });
       if (dup) {
         return res.status(400).json({ success: false, message: 'Another product with this name exists' });
       }
     }
 
-    await dbRun(
-      'UPDATE products SET name = ?, stock_qty = ?, selling_price = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [cleanName, Number(stock_qty) ?? existing.stock_qty, Number(selling_price) ?? existing.selling_price, id]
-    );
+    existing.name = cleanName;
+    if (stock_qty !== undefined) existing.stock_qty = Number(stock_qty);
+    if (selling_price !== undefined) existing.selling_price = Number(selling_price);
 
-    const updated = await dbGet('SELECT * FROM products WHERE id = ?', [id]);
-    res.json({ success: true, data: updated });
+    await existing.save();
+
+    res.json({ success: true, data: existing });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -91,12 +89,12 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const existing = await dbGet('SELECT * FROM products WHERE id = ?', [id]);
+    const existing = await Product.findByPk(id);
     if (!existing) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    await dbRun('DELETE FROM products WHERE id = ?', [id]);
+    await existing.destroy();
     res.json({ success: true, message: 'Product deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
