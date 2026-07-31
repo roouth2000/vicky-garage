@@ -1,13 +1,14 @@
 import React from 'react';
-import { LayoutDashboard, FileText, History, Package, Users, PlusCircle, Wrench, Coins } from 'lucide-react';
+import { LayoutDashboard, FileText, History, Package, Users, PlusCircle, Wrench, Coins, LogOut } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onQuickNewBill: () => void;
+  onLogout: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onQuickNewBill }) => {
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onQuickNewBill, onLogout }) => {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'billing', label: 'New Bill', icon: FileText },
@@ -71,14 +72,21 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onQuick
             })}
           </nav>
 
-          {/* Right Section: Primary Action Button */}
-          <div className="flex items-center shrink-0">
+          {/* Right Section: Primary Action Button & Logout */}
+          <div className="flex items-center space-x-3 shrink-0">
             <button
               onClick={onQuickNewBill}
-              className="flex items-center space-x-1.5 bg-emerald-500 hover:bg-emerald-600 text-white px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap"
+              className="hidden sm:flex items-center space-x-1.5 bg-emerald-500 hover:bg-emerald-600 text-white px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap"
             >
               <PlusCircle className="w-4 h-4 shrink-0" />
               <span>Create Bill</span>
+            </button>
+            <button
+              onClick={onLogout}
+              className="flex items-center justify-center p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-red-500 hover:text-white transition-all shadow-sm group"
+              title="Sign Out"
+            >
+              <LogOut className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
             </button>
           </div>
         </div>

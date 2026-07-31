@@ -6,17 +6,28 @@ import { BillHistory } from './pages/BillHistory';
 import { ProductMaster } from './pages/ProductMaster';
 import { CustomerMaster } from './pages/CustomerMaster';
 import { Expenses } from './pages/Expenses';
+import { Login } from './pages/Login';
 import { Bill } from './types';
 import { InvoicePrintModal } from './components/InvoicePrintModal';
 
 export const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('token'));
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [editingBillId, setEditingBillId] = useState<number | null>(null);
   const [viewingBill, setViewingBill] = useState<Bill | null>(null);
 
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={() => setIsAuthenticated(true)} />;
+  }
+
   const handleQuickNewBill = () => {
     setEditingBillId(null);
     setActiveTab('billing');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
   };
 
   const handleEditBill = (billId: number) => {
@@ -40,6 +51,7 @@ export const App: React.FC = () => {
           setActiveTab(tab);
         }}
         onQuickNewBill={handleQuickNewBill}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Area */}

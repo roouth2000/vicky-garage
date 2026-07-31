@@ -21,6 +21,12 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Auth
+export const loginUser = async (credentials: any): Promise<{ token: string, user: any }> => {
+  const res = await api.post('/auth/login', credentials);
+  return res.data;
+};
+
 // Dashboard
 export const fetchDashboardStats = async (): Promise<DashboardStats> => {
   const res = await api.get('/dashboard/stats');
