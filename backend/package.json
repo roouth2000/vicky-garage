@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "build": "echo \"No build required for Express\""
+    "build": "cd ../frontend && npm install && npm run build"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
