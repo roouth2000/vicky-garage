@@ -27,7 +27,7 @@ app.get('/health', (req, res) => {
 });
 
 // Serve frontend static files
-const frontendDistPath = path.join(process.cwd(), '../frontend/dist');
+const frontendDistPath = path.join(process.cwd(), 'dist');
 app.use(express.static(frontendDistPath));
 
 // Catch-all to serve index.html for frontend routing (if it's not an /api route)
