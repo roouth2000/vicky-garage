@@ -6,12 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.initExpense = exports.Expense = void 0;
 var _sequelize = require("sequelize");
 class Expense extends _sequelize.Model {
-  id;
-  remarks;
-  amount;
-  date;
-  created_at;
-  updated_at;
 }
 exports.Expense = Expense;
 const initExpense = sequelize => {

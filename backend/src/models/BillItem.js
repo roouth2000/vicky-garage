@@ -7,12 +7,6 @@ exports.initBillItem = exports.BillItem = void 0;
 var _sequelize = require("sequelize");
 var _Bill = require("./Bill");
 class BillItem extends _sequelize.Model {
-  id;
-  bill_id;
-  s_no;
-  product_name;
-  qty;
-  amount;
 }
 exports.BillItem = BillItem;
 const initBillItem = sequelize => {

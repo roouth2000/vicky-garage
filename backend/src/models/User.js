@@ -6,12 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.initUser = exports.User = void 0;
 var _sequelize = require("sequelize");
 class User extends _sequelize.Model {
-  id;
-  username;
-  password_hash;
-  role;
-  created_at;
-  updated_at;
 }
 exports.User = User;
 const initUser = sequelize => {
