@@ -83,10 +83,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onQuick
             </button>
             <button
               onClick={onLogout}
-              className="flex items-center justify-center p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-red-500 hover:text-white transition-all shadow-sm group"
-              title="Sign Out"
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-red-500 hover:text-white transition-all shadow-sm font-semibold text-xs whitespace-nowrap"
             >
-              <LogOut className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <LogOut className="w-4 h-4 shrink-0" />
+              <span>Logout</span>
             </button>
           </div>
         </div>
@@ -109,6 +109,13 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onQuick
               </button>
             );
           })}
+          <button
+            onClick={onLogout}
+            className="flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap text-red-400 hover:bg-red-500 hover:text-white"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Logout</span>
+          </button>
         </div>
       </div>
     </header>
