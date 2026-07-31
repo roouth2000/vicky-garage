@@ -2,4 +2,12 @@
 .env
 .env.*
 !.env.example
+*.env
+
+# Dependencies & Build
 node_modules/
+dist/
+
+# Database
+garage_billing.db
+garage_billing_backup.db
