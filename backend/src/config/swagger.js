@@ -14,10 +14,16 @@ const options = {
       version: '1.0.0',
       description: 'API Documentation for Garage Billing Application'
     },
-    servers: [{
-      url: 'http://localhost:3000',
-      description: 'Local server'
-    }],
+    servers: [
+      {
+        url: 'https://vicky-garage.heavenwebtechnologies.com',
+        description: 'Production server'
+      },
+      {
+        url: 'http://localhost:3000',
+        description: 'Local server'
+      }
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -31,6 +37,6 @@ const options = {
       bearerAuth: []
     }]
   },
-  apis: ['./src/routes/*.ts', './src/controllers/*.ts'] // Path to the API docs
+  apis: ['./src/routes/*.js', './src/controllers/*.js'] // Path to the API docs
 };
 const swaggerSpec = exports.swaggerSpec = (0, _swaggerJsdoc.default)(options);
