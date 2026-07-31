@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Invoice Typography & Print Specific CSS */
+.invoice-document {
+  font-family: 'Bookman Old Style', 'Bookman', 'URW Bookman L', 'Palatino Linotype', 'Georgia', serif;
+}
+
+.font-text {
+  font-family: 'Bookman Old Style', 'Bookman', 'URW Bookman L', 'Palatino Linotype', 'Georgia', serif !important;
+}
+
+.font-numeric {
+  font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif !important;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-invoice {
+    visibility: visible;
+    font-family: 'Bookman Old Style', 'Bookman', 'URW Bookman L', 'Palatino Linotype', 'Georgia', serif;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+  }
+  #printable-invoice * {
+    visibility: visible;
+  }
+  #printable-invoice .font-text {
+    font-family: 'Bookman Old Style', 'Bookman', 'URW Bookman L', 'Palatino Linotype', 'Georgia', serif !important;
+  }
+  #printable-invoice .font-numeric {
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif !important;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
+
+/* Exact Sample Bill Print Box Styling */
+.sample-bill-container {
+  font-family: 'Bookman Old Style', 'Bookman', 'URW Bookman L', 'Georgia', serif;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.bill-table-grid tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.bill-table-grid td, .bill-table-grid th {
+  border-right: 1.5px solid #1a237e;
+  border-bottom: 1px solid #1a237e;
+}
+
+.bill-table-grid tr td:last-child, .bill-table-grid tr th:last-child {
+  border-right: none;
+}
+
