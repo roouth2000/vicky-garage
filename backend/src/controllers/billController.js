@@ -3,12 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateBill = exports.getNextBillNo = exports.getDashboardStats = exports.getBills = exports.getBillById = exports.generatePdf = exports.deleteBill = exports.createBill = void 0;
+exports.updateBill = exports.getNextBillNo = exports.getDashboardStats = exports.getBills = exports.getBillById = exports.deleteBill = exports.createBill = void 0;
 var _express = require("express");
 var _models = require("../models");
 var _database = require("../db/database");
 var _expenseController = require("./expenseController");
-var _puppeteer = _interopRequireDefault(require("puppeteer"));
 var _sequelize = require("sequelize");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const getNextBillNo = async (req, res) => {
@@ -452,105 +451,4 @@ const getDashboardStats = async (req, res) => {
     });
   }
 };
-exports.getDashboardStats = getDashboardStats;
-const generatePdf = async (req, res) => {
-  try {
-    const {
-      html
-    } = req.body;
-    if (!html) {
-      return res.status(400).json({
-        success: false,
-        message: 'HTML content is required'
-      });
-    }
-    const browser = await _puppeteer.default.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--font-render-hinting=none',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--no-zygote',
-        '--single-process'
-      ]
-    });
-    const page = await browser.newPage();
-    await page.setViewport({
-      width: 794,
-      height: 1123,
-      deviceScaleFactor: 2
-    });
-    const fullHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="UTF-8">
-          <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-          <style>
-            @page {
-              size: A4 portrait;
-              margin: 10mm 8mm 10mm 8mm;
-            }
-            * {
-              box-sizing: border-box;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            html, body { 
-              margin: 0; 
-              padding: 0; 
-              background-color: white;
-              width: 100%;
-              height: 100%;
-            }
-            .invoice-document {
-              margin: 0 auto !important;
-              border: 2px solid #1a237e !important;
-              box-shadow: none !important;
-            }
-            .font-text { font-family: 'Bookman Old Style', 'Bookman', 'URW Bookman L', 'Lora', Georgia, serif !important; }
-            .font-numeric { font-family: 'Arial', sans-serif !important; }
-            .bill-table-grid td, .bill-table-grid th {
-              border-right: 1.5px solid #1a237e !important;
-              border-bottom: 1px solid #1a237e !important;
-              padding: 4px 6px !important;
-            }
-            .bill-table-grid tr td:last-child, .bill-table-grid tr th:last-child {
-              border-right: none !important;
-            }
-          </style>
-        </head>
-        <body style="display: flex; justify-content: center; align-items: flex-start;">
-          ${html}
-        </body>
-      </html>
-    `;
-    await page.setContent(fullHtml, {
-      waitUntil: 'load'
-    });
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      preferCSSPageSize: true,
-      margin: {
-        top: '10mm',
-        right: '8mm',
-        bottom: '10mm',
-        left: '8mm'
-      }
-    });
-    await browser.close();
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
-    res.send(Buffer.from(pdfBuffer));
-  } catch (error) {
-    console.error('PDF Generation Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to generate PDF'
-    });
-  }
-};
-exports.generatePdf = generatePdf;
+exports.getDashboardStats = getDashboardStats;

@@ -42,7 +42,6 @@ router.get('/bills/next-no', _billController.getNextBillNo);
 router.get('/bills', _billController.getBills);
 router.get('/bills/:id', _billController.getBillById);
 router.post('/bills', _billController.createBill);
-router.post('/bills/generate-pdf', _billController.generatePdf);
 router.put('/bills/:id', _billController.updateBill);
 router.delete('/bills/:id', _billController.deleteBill);
 

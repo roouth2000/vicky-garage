@@ -3,7 +3,8 @@ import { X, Printer, Download, FileText } from 'lucide-react';
 import { Bill } from '../types';
 import { InvoiceDocument } from './InvoiceDocument';
 import { formatBillNo } from '../utils/format';
-import { generateInvoicePdf } from '../services/api';
+// @ts-ignore
+import html2pdf from 'html2pdf.js';
 
 interface InvoicePrintModalProps {
   bill: Bill;
@@ -26,19 +27,18 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({ bill, onCl
         return;
       }
 
-      const html = element.outerHTML;
-      const blob = await generateInvoicePdf(html);
+      const filename = `Bill_${bill.vehicle_number.replace(/\s+/g, '_')}.pdf`;
+      const opt: any = {
+        margin:       10,
+        filename:     filename,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
 
-      // Create a download link and trigger it
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      // link.download = `Bill_${formatBillNo(bill.bill_no)}_${bill.vehicle_number.replace(/\s+/g, '_')}.pdf`;
-      link.download = `Bill_${bill.vehicle_number.replace(/\s+/g, '_')}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      // Generate the PDF and save it directly in the browser
+      await html2pdf().set(opt).from(element).save();
+
     } catch (err) {
       console.error('PDF export error:', err);
       alert('Failed to generate PDF. You can also use the Print button to Save as PDF.');
