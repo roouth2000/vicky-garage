@@ -15,7 +15,7 @@ const dbUser = process.env.DB_USER || 'u814366633_garage_billing';
 const dbPassword = process.env.DB_PASSWORD || 'Vicky-garage@123';
 const dbHost = process.env.DB_HOST || '127.0.0.1';
 const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306;
-const dialect = process.env.DB_DIALECT || 'sqlite';
+const dialect = process.env.DB_DIALECT || 'mysql';
 
 const sequelizeOptions = {
   dialect: dialect,
