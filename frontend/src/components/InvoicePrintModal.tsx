@@ -3,8 +3,8 @@ import { X, Printer, Download, FileText } from 'lucide-react';
 import { Bill } from '../types';
 import { InvoiceDocument } from './InvoiceDocument';
 import { formatBillNo } from '../utils/format';
-// @ts-ignore
-import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 interface InvoicePrintModalProps {
   bill: Bill;
@@ -27,17 +27,28 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({ bill, onCl
         return;
       }
 
-      const filename = `Bill_${bill.vehicle_number.replace(/\s+/g, '_')}.pdf`;
-      const opt: any = {
-        margin:       10,
-        filename:     filename,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
+      // Allow a brief moment for fonts/images to render properly
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Generate the PDF and save it directly in the browser
-      await html2pdf().set(opt).from(element).save();
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.98);
+      
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Bill_${bill.vehicle_number.replace(/\s+/g, '_')}.pdf`);
 
     } catch (err) {
       console.error('PDF export error:', err);
