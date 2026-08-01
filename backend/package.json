@@ -4,7 +4,8 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "build": "echo 'Build bypassed: Frontend is pre-built'"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
